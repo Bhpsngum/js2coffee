@@ -171,22 +171,25 @@ class Builder extends BuilderBase
     if items is 0
       [ "[]" ]
     else if isSingleLine
-      [ "[", node.elements.map(@walk), "]" ]
+      singleElement = String(@walk(node.elements[0]))
+      if singleElement.endsWith "\n"
+        singleElement += @indent()
+      [ "[", singleElement, "]" ]
     else
       @indent (indent) =>
         elements = node.elements.map (e) =>
-          parsed = @walk(e)
-          if e.type is "Identifier" or e.type is "Literal" or e.type is "UnaryExpression"
-            return parsed
-          else
-            return " " + parsed
+          parsed = String(@walk(e))
+          if e.type isnt "Identifier" and e.type isnt "Literal" and e.type isnt "UnaryExpression"
+            parsed = " " + parsed
+
+          if parsed.endsWith "\n"
+            parsed += @indent()
+
+          return parsed
 
         contents = elements.join ","
 
-        if elements[elements.length - 1].endsWith "\n"
-          [ "[", contents, @indent(), "]" ]
-        else
-          [ "[", contents, "]" ]
+        return [ "[", contents, "]" ]
 
   ObjectExpression: (node, ctx) ->
     props = node.properties.length
