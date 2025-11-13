@@ -1,4 +1,45 @@
 ## Customized differences from original js2coffee
 ### Array
-- Array with a single element is now having no appended space: `[ 1 ]` --> `[1]`
-- Array with multiple elements are now joining in one line, separating by `,`: `1<NEWLINE>2<NEWLINE>3` --> `[1,2,3]`
+- Array with a single element is now having no appended space
+```coffee
+# JS
+[1]
+
+# Output (old)
+[ 1 ]
+
+# Output (new)
+[1]
+```
+- Array with multiple elements are now having separator of `,` or `, ` instead of newline
+```coffee
+# JS
+[1, 2, 3, { a: 1, b: 2}]
+
+# Output (old)
+[
+	1
+	2
+	3
+]
+
+# Output (new)
+[1,2,3, {
+	a: 1
+	b: 2
+}]
+```
+
+### Object
+- Object properties are always shown in next lines regardless of properties count
+```coffee
+# JS
+object = { a: 1 }
+
+# Output (old)
+object = a: 1
+
+# Output (new)
+object =
+	a: 1
+```

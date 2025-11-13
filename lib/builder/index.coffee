@@ -186,14 +186,6 @@ class Builder extends BuilderBase
     if props is 0
       [ "{}" ]
 
-    # Single prop ({ a: 2 })
-    else if props is 1
-      props = node.properties.map(@walk)
-      if isBraced
-        @paren space [ "{", props, "}" ]
-      else
-        @paren [ props ]
-
     # Last expression in scope (`function() { ({a:2}); }`)
     else if node._last
       props = node.properties.map(@walk)
