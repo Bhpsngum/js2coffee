@@ -43,3 +43,19 @@ object = a: 1
 object =
 	a: 1
 ```
+- Property name will always be tried to change to non-quoted version
+```coffee
+# JS
+object = { "a": 1, "a-b": 1 }
+
+# Output (old)
+object =
+	'a': 1
+	'a-b': 1
+
+# Output (new)
+object =
+	a: 1
+	'a-b': 1
+```
+As for now characters outside of ASCII range is not supported, and such case will fallback to original handler.

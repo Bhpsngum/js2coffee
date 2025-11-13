@@ -224,7 +224,12 @@ class Builder extends BuilderBase
     if node.kind isnt 'init'
       throw new Error("Property: not sure about kind " + node.kind)
 
-    space [ [@walk(node.key), ":"], @walk(node.value) ]
+    value = @walk(node.value)
+
+    if node.key.type is "Literal" and node.key.value.match /^[a-z$_][a-z0-9$_]*$/
+      space [ [node.key.value, ":"], value ]
+    else
+      space [ [@walk(node.key), ":"], value ]
 
   # TODO: convert VariableDeclaration into AssignmentExpression
   VariableDeclaration: (node) ->
