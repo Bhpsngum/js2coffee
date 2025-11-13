@@ -174,9 +174,19 @@ class Builder extends BuilderBase
       [ "[", node.elements.map(@walk), "]" ]
     else
       @indent (indent) =>
-        elements = node.elements.map (e) => @walk(e)
+        elements = node.elements.map (e) =>
+          parsed = @walk(e)
+          if e.type is "Identifier" or e.type is "Literal"
+            return String(parsed)
+          else
+            return " " + parsed
+
         contents = elements.join ","
-        [ "[", contents, "]" ]
+
+        if elements[elements.length - 1].endsWith "\n"
+          [ "[", contents, @indent(), "]" ]
+        else
+          [ "[", contents, "]" ]
 
   ObjectExpression: (node, ctx) ->
     props = node.properties.length
@@ -186,10 +196,18 @@ class Builder extends BuilderBase
     if props is 0
       [ "{}" ]
 
-    # Last expression in scope (`function() { ({a:2}); }`)
-    else if node._last
-      props = node.properties.map(@walk)
-      return delimit(props, [ "\n", @indent() ])
+    # # Single prop ({ a: 2 })
+    # else if props is 1
+    #   props = node.properties.map(@walk)
+    #   if isBraced
+    #     @paren space [ "{", props, "}" ]
+    #   else
+    #     @paren [ props ]
+
+    # # Last expression in scope (`function() { ({a:2}); }`)
+    # else if node._last
+    #   props = node.properties.map(@walk)
+    #   return delimit(props, [ "\n", @indent() ])
 
     # Multiple props ({ a: 2, b: 3 })
     else
