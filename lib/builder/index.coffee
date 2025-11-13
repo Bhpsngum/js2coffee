@@ -176,8 +176,9 @@ class Builder extends BuilderBase
       @indent (indent) =>
         elements = node.elements.map (e) =>
           parsed = @walk(e)
-          if e.type is "Identifier" or e.type is "Literal"
-            return String(parsed)
+          console.log(e)
+          if e.type is "Identifier" or e.type is "Literal" or e.type is "UnaryExpression"
+            return parsed
           else
             return " " + parsed
 
