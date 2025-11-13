@@ -171,12 +171,12 @@ class Builder extends BuilderBase
     if items is 0
       [ "[]" ]
     else if isSingleLine
-      space [ "[", node.elements.map(@walk), "]" ]
+      [ "[", node.elements.map(@walk), "]" ]
     else
       @indent (indent) =>
-        elements = node.elements.map (e) => newline @walk(e)
-        contents = prependAll(elements, @indent())
-        [ "[", "\n", contents, indent, "]" ]
+        elements = node.elements.map (e) => @walk(e)
+        contents = elements.join ","
+        [ "[", contents, "]" ]
 
   ObjectExpression: (node, ctx) ->
     props = node.properties.length
@@ -375,7 +375,7 @@ class Builder extends BuilderBase
 
   CoffeeDoExpression: (node) ->
     space [ 'do', @walk(node.function) ]
-    
+
   ###*
   # makeSequence():
   # Builds a comma-separated sequence of nodes.

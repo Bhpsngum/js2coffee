@@ -1,2 +1,6 @@
 node_modules
 _*
+package-lock.json
+.DS_Store
+._.DS_Store
+local
